@@ -1,15 +1,8 @@
 'use client';
 import { Fragment, useState } from 'react';
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
+import { Dialog, Disclosure, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import {
-  ChevronDownIcon,
-  FunnelIcon,
-  MinusIcon,
-  PlusIcon,
-  Squares2X2Icon,
-} from '@heroicons/react/20/solid';
-import { classNames } from '@/utils/classNames';
+import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid';
 import Table from './table';
 import Image from 'next/image';
 
