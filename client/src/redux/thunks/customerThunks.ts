@@ -2,30 +2,34 @@ import axios, { AxiosError } from 'axios';
 import { Customer } from '../types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+const createFormData = (customerData: Customer): FormData => {
+  const formData = new FormData();
+  formData.append('userName', customerData.userName);
+  formData.append('customerName', customerData.customerName);
+  formData.append('email', customerData.email);
+  if (customerData.profilePicture) {
+    formData.append('image', customerData.profilePicture);
+  }
+  return formData;
+};
 export const addCustomerThunk = createAsyncThunk(
   'customer/addCustomerAsync',
   async (customerData: Customer, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
-      formData.append('userName', customerData.userName);
-      formData.append('customerName', customerData.customerName);
-      formData.append('email', customerData.email);
-      if (customerData.profilePicture) {
-        formData.append('image', customerData.profilePicture);
-      }
-
+      const formData = createFormData(customerData);
       const response = await axios.post('api/customer/add', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data for file upload
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      return response.data; // Assuming the response data is the new customer
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data);
+      }
+      throw error;
     }
   }
 );
+
 export const getCustomerThunk = createAsyncThunk(
   'customer/getCustomerAsync',
   async () => {
@@ -52,12 +56,15 @@ export const getCustomerThunk = createAsyncThunk(
 
 export const deleteCustomerThunk = createAsyncThunk(
   'customer/deleteCustomerAsync',
-  async (customerId: any, { rejectWithValue }) => {
+  async (customerId: string, { rejectWithValue }) => {
     try {
-      const response = await axios.post('api/customer/delete', { customerId });
+      const response = await axios.delete(`api/customer/delete/${customerId}`);
       return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data);
+      }
+      throw error;
     }
   }
 );
@@ -72,9 +79,8 @@ export const editCustomerThunk = createAsyncThunk(
       if (customerData.profilePicture) {
         formData.append('image', customerData.profilePicture);
       }
-
       const response = await axios.put(
-        `api/customer/edit/${customerData.id}`,
+        `api/customer/edit/${customerData._id}`,
         formData,
         {
           headers: {

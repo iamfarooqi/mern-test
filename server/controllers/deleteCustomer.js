@@ -2,13 +2,13 @@ import { CUSTOMER } from '../models/customer.js';
 
 export const deleteCustomer = async (req, res, next) => {
     try {
-        const { customerId } = req.body;
+        const { id } = req.params;
 
-        if (!customerId) {
+        if (!id) {
             return res.status(400).send({ message: "Customer ID is required" });
         }
 
-        const customer = await CUSTOMER.findByIdAndDelete(customerId);
+        const customer = await CUSTOMER.findByIdAndDelete(id);
 
         if (!customer) {
             return res.status(404).send({ message: "Customer not found" });

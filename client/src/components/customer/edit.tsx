@@ -1,11 +1,12 @@
-import { editCustomerThunk } from '@/redux/thunks/customerThunks';
 import React, { useEffect, useState } from 'react';
+
+import { editCustomerThunk } from '@/redux/thunks/customerThunks';
 import { useAppDispatch } from '@/redux/hooks';
 import Modal from '@/common/modal';
 
 interface AddCustomerProps {
   open: boolean;
-  setOpen: (arg0: boolean) => void;
+  setOpen: (open: boolean) => void;
   customer: any | null;
 }
 
@@ -17,7 +18,7 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
   const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState({
-    id: '',
+    _id: '',
     userName: '',
     customerName: '',
     email: '',
@@ -44,7 +45,7 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
   useEffect(() => {
     if (customer) {
       setFormData({
-        id: customer._id,
+        _id: customer._id,
         userName: customer.userName,
         customerName: customer.customerName,
         email: customer.email,
@@ -53,12 +54,14 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
     }
   }, [customer]);
 
+  const handleClose = () => setOpen(false);
+
   return (
     <Modal open={open} setOpen={setOpen}>
       <div className="w-96 rounded-xl shadow">
         <div className="flex flex-col items-center justify-between p-4 md:p-5 border-b bg-gradient-to-r from-[#50B389] via-[#328B6E] to-[#095748] rounded-t-xl">
           <button
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             className="end-2.5 text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:opacity-60"
           >
             <svg

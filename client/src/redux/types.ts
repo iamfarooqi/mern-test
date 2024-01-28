@@ -1,6 +1,6 @@
 'use client';
 export interface Customer {
-  id: string;
+  _id: any;
   userName: string;
   customerName: string;
   email: string;

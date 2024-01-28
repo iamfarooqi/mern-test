@@ -7,13 +7,12 @@ import { editCustomer } from '../controllers/editCustomer.js';
 import { deleteCustomer } from '../controllers/deleteCustomer.js';
 
 const router = express.Router();
-
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.post('/add', upload.single('image'), addCustomer)
 router.get('/get', getCustomer)
 router.put('/edit/:id', upload.single('image'), editCustomer)
-router.post('/delete', deleteCustomer)
+router.delete('/delete/:id', deleteCustomer)
 
 export default router;

@@ -5,8 +5,8 @@ const CustomerSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   email: { type: String, required: true },
   profilePicture: {
-    data: Buffer,        // Binary image data
-    contentType: String  // Image content type (e.g., "image/jpeg")
+    data: Buffer,
+    contentType: String  
   },
 });
 

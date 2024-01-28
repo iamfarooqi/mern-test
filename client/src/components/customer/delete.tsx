@@ -1,14 +1,14 @@
-import Modal from '@/common/modal';
-import { useAppDispatch } from '@/redux/hooks';
-import { deleteCustomer } from '@/redux/slices/customerSlice';
-import { deleteCustomerThunk } from '@/redux/thunks/customerThunks';
-import { Customer } from '@/redux/types';
 import React from 'react';
+
+import { deleteCustomerThunk } from '@/redux/thunks/customerThunks';
+import { useAppDispatch } from '@/redux/hooks';
+import { Customer } from '@/redux/types';
+import Modal from '@/common/modal';
 
 interface AddCustomerProps {
   open: boolean;
-  setOpen: (arg0: boolean) => void;
-  customer: Customer | null; // Add this line
+  setOpen: (open: boolean) => void;
+  customer: Customer | null;
 }
 
 const DeleteCustomerModal: React.FC<AddCustomerProps> = ({
@@ -18,22 +18,25 @@ const DeleteCustomerModal: React.FC<AddCustomerProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const handleDeleteCustomer = (customer: any) => {
-    try {
-      const id = customer?._id;
-      dispatch(deleteCustomerThunk(id));
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setOpen(false);
+  const handleDeleteCustomer = () => {
+    if (customer) {
+      try {
+        dispatch(deleteCustomerThunk(customer._id));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setOpen(false);
+      }
     }
   };
+
+  const handleClose = () => setOpen(false);
   return (
     <Modal open={open} setOpen={setOpen}>
       <div className="w-96 rounded-xl shadow">
         <div className="flex flex-col items-center justify-between p-4 md:p-5 rounded-t-xl">
           <button
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             className="end-2.5 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:opacity-60"
           >
             <svg
@@ -79,7 +82,7 @@ const DeleteCustomerModal: React.FC<AddCustomerProps> = ({
             cancel
           </button>
           <button
-            onClick={() => handleDeleteCustomer(customer)}
+            onClick={handleDeleteCustomer}
             className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-12 py-2.5 hover:text-gray-900 focus:z-10 uppercase"
           >
             delete

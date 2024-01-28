@@ -6,13 +6,13 @@ import Modal from '@/common/modal';
 
 interface AddCustomerProps {
   open: boolean;
-  setOpen: (arg0: boolean) => void;
+  setOpen: (open: boolean) => void;
 }
 
 const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
   const dispatch = useAppDispatch();
   const [customerData, setCustomerData] = useState({
-    id: '',
+    _id: '',
     userName: '',
     customerName: '',
     email: '',
@@ -20,11 +20,13 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomerData({ ...customerData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setCustomerData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
+    const { files } = e.target;
+    const file = files && files[0];
     if (file) {
       setCustomerData({ ...customerData, profilePicture: file });
     }

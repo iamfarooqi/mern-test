@@ -167,7 +167,6 @@ export default function Index() {
               </ul>
             </div>
 
-            {/* Product grid */}
             <div className="w-full">
               <Table setMobileFiltersOpen={setMobileFiltersOpen} />
             </div>
