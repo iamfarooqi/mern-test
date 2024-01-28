@@ -1,40 +1,61 @@
-// import { AppDispatch } from '../store';
-// import {
-//   fetchCustomersBegin,
-//   fetchCustomersSuccess,
-//   fetchCustomersFailure,
-// } from '../slices/customerSlice';
-// import { CustomerData } from '../types';
+import axios, { AxiosError } from 'axios';
+import { Customer } from '../types';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
-// export const fetchCustomers = () => async (dispatch: AppDispatch) => {
-//   try {
-//     dispatch(fetchCustomersBegin());
-//     const response = await fetch('/api/customers');
-//     const customers = await response.json();
-//     dispatch(fetchCustomersSuccess(customers));
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       dispatch(fetchCustomersFailure(error.message));
-//     } else {
-//       // Handle cases where the error is not an instance of Error
-//       dispatch(fetchCustomersFailure('An unknown error occurred'));
-//     }
-//   }
-// };
+export const addCustomerThunk = createAsyncThunk(
+  'customer/addCustomerAsync',
+  async (customerData: Customer, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('api/customer/add', customerData);
+      return response.data; // Assuming the response data is the new customer
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const getCustomerThunk = createAsyncThunk(
+  'customer/getCustomerAsync',
+  async () => {
+    try {
+      const response = await axios.get('api/customer/get');
+      return response.data;
+    } catch (error: any) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        return error.response.data;
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from the server.');
+        // Note: No need to throw error here
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up the request:', error.message);
+        // Note: No need to throw error here
+      }
+    }
+  }
+);
 
-// export const addCustomerAsync = (customerData: CustomerData) => async (dispatch: AppDispatch) => {
-//   try {
-//     const response = await fetch('/api/customers/add', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(customerData),
-//     });
-//     const newCustomer = await response.json();
-//     dispatch(addCustomer(newCustomer));
-//   } catch (error) {
-//     console.error('Failed to add customer:', error);
-//     // Optionally dispatch an error action here
-//   }
-// };
+export const deleteCustomerThunk = createAsyncThunk(
+  'customer/deleteCustomerAsync',
+  async (customerId: any, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('api/customer/delete', { customerId });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const editCustomerThunk = createAsyncThunk(
+  'customer/editCustomerAsync',
+  async (customerData: Customer, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('api/customer/edit', customerData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

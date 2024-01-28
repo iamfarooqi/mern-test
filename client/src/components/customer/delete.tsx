@@ -1,6 +1,7 @@
 import Modal from '@/common/modal';
 import { useAppDispatch } from '@/redux/hooks';
 import { deleteCustomer } from '@/redux/slices/customerSlice';
+import { deleteCustomerThunk } from '@/redux/thunks/customerThunks';
 import { Customer } from '@/redux/types';
 import React from 'react';
 
@@ -19,8 +20,8 @@ const DeleteCustomerModal: React.FC<AddCustomerProps> = ({
 
   const handleDeleteCustomer = (customer: any) => {
     try {
-      const id = customer?.id;
-      dispatch(deleteCustomer(id));
+      const id = customer?._id;
+      dispatch(deleteCustomerThunk(id));
     } catch (error) {
       console.log(error);
     } finally {

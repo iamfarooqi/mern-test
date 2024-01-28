@@ -9,11 +9,14 @@ interface Props {
 }
 
 const Table: React.FC<Props> = ({ setMobileFiltersOpen }) => {
-  const customers = useAppSelector((state) => state.customer.customers);
+  const { customers, loading, error } = useAppSelector(
+    (state: any) => state.customer
+  );
   const [deleteCustomerModal, setDeleteCustomerModal] = useState(false);
   const [editCustomerModal, setEditCustomerModal] = useState(false);
   const [addCustomerModal, setAddCustomerModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  console.log(customers, loading, error, 'customers>>');
 
   return (
     <div className="h-screen bg-gray-100 overflow-y-scroll">
@@ -150,7 +153,9 @@ const Table: React.FC<Props> = ({ setMobileFiltersOpen }) => {
                 })}
               </tbody>
             </table>
-            {customers.length == 0 && <div>No Data</div>}
+            {loading && <div>Loading Customer Data</div>}
+            {error && <div className="text-red-600">{error}</div>}
+            {!loading && !error && customers.length == 0 && <div>No Data</div>}
           </div>
         </div>
       </main>

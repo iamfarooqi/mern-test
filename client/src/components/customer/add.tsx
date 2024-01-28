@@ -1,6 +1,7 @@
 import Modal from '@/common/modal';
 import { useAppDispatch } from '@/redux/hooks';
 import { addCustomer } from '@/redux/slices/customerSlice';
+import { addCustomerThunk } from '@/redux/thunks/customerThunks';
 import React, { useState } from 'react';
 
 interface AddCustomerProps {
@@ -25,7 +26,8 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
     e.preventDefault();
     // Generate a unique ID for the customer - you can replace this with any ID generation logic
     customerData.id = Date.now().toString();
-    dispatch(addCustomer(customerData));
+    dispatch(addCustomerThunk(customerData));
+    // dispatch(addCustomer(customerData));
     setOpen(false); // Close the modal after adding
   };
   return (

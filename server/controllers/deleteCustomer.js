@@ -1,12 +1,12 @@
 import { CUSTOMER } from '../models/customer.js';
 
-export const getCustomer = async (req, res, next) => {
+export const deleteCustomer = async (req, res, next) => {
     try {
-        const customer = await CUSTOMER.find({});
-
+        const { customerId } = req.body
+        const customer = await CUSTOMER.findByIdAndDelete(customerId);
         if (customer) {
             res.status(201).send({
-                message: "Customer data fetched successfully",
+                message: "Customer deleted successfully",
                 customerData: customer
             });
         } else {

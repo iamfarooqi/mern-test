@@ -1,13 +1,12 @@
-import Modal from '@/common/modal';
-import { useAppDispatch } from '@/redux/hooks';
-import { updateCustomer } from '@/redux/slices/customerSlice';
-import { Customer } from '@/redux/types';
+import { editCustomerThunk } from '@/redux/thunks/customerThunks';
 import React, { useEffect, useState } from 'react';
+import { useAppDispatch } from '@/redux/hooks';
+import Modal from '@/common/modal';
 
 interface AddCustomerProps {
   open: boolean;
   setOpen: (arg0: boolean) => void;
-  customer: Customer | null; // Add this line
+  customer: any | null;
 }
 
 const EditCustomerModal: React.FC<AddCustomerProps> = ({
@@ -22,18 +21,17 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
     userName: '',
     customerName: '',
     email: '',
-    // include other fields as needed
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(updateCustomer(formData));
+    dispatch(editCustomerThunk(formData));
     setOpen(false);
   };
 
   useEffect(() => {
     if (customer) {
       setFormData({
-        id: customer.id,
+        id: customer._id,
         userName: customer.userName,
         customerName: customer.customerName,
         email: customer.email,
