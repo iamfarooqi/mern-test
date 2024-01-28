@@ -6,7 +6,20 @@ export const addCustomerThunk = createAsyncThunk(
   'customer/addCustomerAsync',
   async (customerData: Customer, { rejectWithValue }) => {
     try {
-      const response = await axios.post('api/customer/add', customerData);
+      const formData = new FormData();
+      formData.append('userName', customerData.userName);
+      formData.append('customerName', customerData.customerName);
+      formData.append('email', customerData.email);
+      if (customerData.profilePicture) {
+        formData.append('image', customerData.profilePicture);
+      }
+
+      const response = await axios.post('api/customer/add', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data for file upload
+        },
+      });
+
       return response.data; // Assuming the response data is the new customer
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -52,10 +65,29 @@ export const editCustomerThunk = createAsyncThunk(
   'customer/editCustomerAsync',
   async (customerData: Customer, { rejectWithValue }) => {
     try {
-      const response = await axios.post('api/customer/edit', customerData);
+      const formData = new FormData();
+      formData.append('userName', customerData.userName);
+      formData.append('customerName', customerData.customerName);
+      formData.append('email', customerData.email);
+      if (customerData.profilePicture) {
+        formData.append('image', customerData.profilePicture);
+      }
+      console.log(customerData, 'customerData>>');
+
+      const response = await axios.put(
+        `api/customer/edit/${customerData.id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
   }
 );
+

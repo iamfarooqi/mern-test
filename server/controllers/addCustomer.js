@@ -3,10 +3,24 @@ import { CUSTOMER } from '../models/customer.js';
 export const addCustomer = async (req, res) => {
     try {
         const { customerName, userName, email } = req.body;
-        const customer = new CUSTOMER({ customerName, userName, email });
+        let imageData;
+        if (req.file) {
+            imageData = {
+                data: req.file.buffer,
+                contentType: req.file.mimetype
+            };
+        }
+
+        const customer = new CUSTOMER({
+            customerName,
+            userName,
+            email,
+            profilePicture: imageData
+        });
+
         const addedCustomer = await customer.save();
 
-        if (customer) {
+        if (addedCustomer) {
             res.status(201).send({
                 message: "Customer created successfully",
                 customerData: addedCustomer
@@ -19,3 +33,4 @@ export const addCustomer = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+

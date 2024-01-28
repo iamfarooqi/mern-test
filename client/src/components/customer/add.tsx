@@ -1,8 +1,8 @@
-import Modal from '@/common/modal';
-import { useAppDispatch } from '@/redux/hooks';
-import { addCustomer } from '@/redux/slices/customerSlice';
-import { addCustomerThunk } from '@/redux/thunks/customerThunks';
 import React, { useState } from 'react';
+
+import { addCustomerThunk } from '@/redux/thunks/customerThunks';
+import { useAppDispatch } from '@/redux/hooks';
+import Modal from '@/common/modal';
 
 interface AddCustomerProps {
   open: boolean;
@@ -16,24 +16,34 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
     userName: '',
     customerName: '',
     email: '',
+    profilePicture: null as File | null,
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomerData({ ...customerData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Generate a unique ID for the customer - you can replace this with any ID generation logic
-    customerData.id = Date.now().toString();
-    dispatch(addCustomerThunk(customerData));
-    // dispatch(addCustomer(customerData));
-    setOpen(false); // Close the modal after adding
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setCustomerData({ ...customerData, profilePicture: file });
+    }
   };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await dispatch(addCustomerThunk(customerData));
+    } catch (error) {
+      console.log('Error', error);
+    } finally {
+      setOpen(false);
+    }
+  };
+
   return (
     <Modal open={open} setOpen={setOpen}>
       <div className="w-96 rounded-xl shadow">
-        <div className="flex flex-col items-center justify-between p-4 md:p-5 border-b bg-primary-color rounded-t-xl">
+        <div className="flex flex-col items-center justify-between p-4 md:p-5 border-b rounded-t-xl bg-gradient-to-r from-[#50B389] via-[#328B6E] to-[#095748]">
           <button
             onClick={() => setOpen(false)}
             className="end-2.5 text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:opacity-60"
@@ -66,7 +76,7 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 type="text"
                 name="userName"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 placeholder="Username"
                 onChange={handleInputChange}
                 required
@@ -95,14 +105,25 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
               />
             </div>
 
-            <div className="flex justify-between">
-              <a href="#" className="text-sm text-blue-700 hover:underline">
+            <div className="py-1">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="upload-photo"
+                required
+              />
+              <label
+                htmlFor="upload-photo"
+                className="text-sm text-blue-700 hover:underline cursor-pointer"
+              >
                 Upload Photo
-              </a>
+              </label>
             </div>
             <button
               type="submit"
-              className="w-full text-white bg-primary-color hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase"
+              className="w-full text-white hover:opacity-75 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase bg-gradient-to-r from-[#50B389] via-[#328B6E] to-[#095748]"
             >
               Add Customer
             </button>

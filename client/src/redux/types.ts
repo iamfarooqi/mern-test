@@ -4,6 +4,7 @@ export interface Customer {
   userName: string;
   customerName: string;
   email: string;
+  profilePicture: File | null;
 }
 
 export interface CustomerState {
