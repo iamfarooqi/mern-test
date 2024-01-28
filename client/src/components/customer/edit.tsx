@@ -25,15 +25,19 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
     profilePicture: null as File | null,
   });
 
+  const MAX_SIZE = 100 * 1024;
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     const file = files && files[0];
     if (file) {
-      if (file.type === 'image/png') {
+      if (file.type !== 'image/png') {
+        setFileError('Please upload a PNG image.');
+      } else if (file.size > MAX_SIZE) {
+        setFileError('File size should not exceed 100KB.');
+      } else {
         setFormData({ ...formData, profilePicture: file });
         setFileError('');
-      } else {
-        setFileError('Please upload a PNG image.');
       }
     }
   };
@@ -150,12 +154,21 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
               </label>
               {fileError && <p className="text-red-500">{fileError}</p>}
             </div>
-            <button
-              type="submit"
-              className="w-full text-white hover:opacity-75 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase bg-gradient-to-r from-[#50B389] via-[#328B6E] to-[#095748]"
-            >
-              Edit Customer
-            </button>
+            {fileError ? (
+              <button
+                className="w-full text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase bg-gradient-to-r from-[#50B389] via-[#328B6E] to-[#095748] cursor-not-allowed opacity-75"
+                disabled
+              >
+                Edit Customer
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="w-full text-white hover:opacity-75 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase bg-gradient-to-r from-[#50B389] via-[#328B6E] to-[#095748]"
+              >
+                Edit Customer
+              </button>
+            )}
           </form>
         </div>
       </div>
