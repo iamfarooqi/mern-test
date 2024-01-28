@@ -1,14 +1,11 @@
 import express from 'express';
-import multer from 'multer';
+import { addCustomer } from '../controllers/addCustomer.js';
+import { getCustomer } from '../controllers/getCustomer.js';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' });
-
-router.post('/api/customers', upload.single('profilePicture'), (req, res) => {
-    // At this point, the customer has been created and saved to the database
-    // req.customer contains the saved customer
-    res.status(201).send(req.customer);
-})
+// const upload = multer({ dest: 'uploads/' });
+router.post('/add-customer', addCustomer)
+router.get('/get-customer', getCustomer)
 // Routes go here
 
 export default router;

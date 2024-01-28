@@ -150,6 +150,7 @@ const Table: React.FC<Props> = ({ setMobileFiltersOpen }) => {
                 })}
               </tbody>
             </table>
+            {customers.length == 0 && <div>No Data</div>}
           </div>
         </div>
       </main>
