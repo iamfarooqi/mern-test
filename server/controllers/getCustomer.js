@@ -1,20 +1,20 @@
 import { CUSTOMER } from '../models/customer.js';
 
-export const getCustomer = async (req, res, next) => {
+export const getCustomer = async (req, res,) => {
     try {
-        const customer = await CUSTOMER.find({});
+        const customers = await CUSTOMER.find({});
 
-        if (customer) {
-            res.status(201).send({
-                message: "Customer data fetched successfully",
-                customerData: customer
-            });
-        } else {
-            res.status(404).send("Customer not found");
+        if (customers.length === 0) {
+            return res.status(404).send({ message: "No customers found" });
         }
+
+        res.status(200).send({
+            message: "Customer data fetched successfully",
+            customerData: customers
+        });
 
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({ message: "Internal Server Error", error: error.message });
     }
 };

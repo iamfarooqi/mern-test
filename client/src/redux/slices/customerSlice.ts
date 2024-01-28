@@ -9,7 +9,7 @@ import {
 
 const initialState: CustomerState = {
   customers: [],
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -103,7 +103,6 @@ export const customerSlice: any = createSlice({
       })
       .addCase(editCustomerThunk.fulfilled, (state, action) => {
         state.loading = false;
-        // Replace the existing customer with the edited one in the array
         state.customers = state.customers.map((customer: any) =>
           customer._id === action.payload.customerData._id
             ? action.payload.customerData

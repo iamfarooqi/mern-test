@@ -2,19 +2,25 @@ import { CUSTOMER } from '../models/customer.js';
 
 export const deleteCustomer = async (req, res, next) => {
     try {
-        const { customerId } = req.body
-        const customer = await CUSTOMER.findByIdAndDelete(customerId);
-        if (customer) {
-            res.status(201).send({
-                message: "Customer deleted successfully",
-                customerData: customer
-            });
-        } else {
-            res.status(404).send("Customer not found");
+        const { customerId } = req.body;
+
+        if (!customerId) {
+            return res.status(400).send({ message: "Customer ID is required" });
         }
+
+        const customer = await CUSTOMER.findByIdAndDelete(customerId);
+
+        if (!customer) {
+            return res.status(404).send({ message: "Customer not found" });
+        }
+
+        res.status(200).send({
+            message: "Customer deleted successfully",
+            customerData: customer
+        });
 
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({ message: "Internal Server Error", error: error.message });
     }
 };

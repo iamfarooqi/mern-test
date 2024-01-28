@@ -72,7 +72,6 @@ export const editCustomerThunk = createAsyncThunk(
       if (customerData.profilePicture) {
         formData.append('image', customerData.profilePicture);
       }
-      console.log(customerData, 'customerData>>');
 
       const response = await axios.put(
         `api/customer/edit/${customerData.id}`,

@@ -3,7 +3,18 @@ import { CUSTOMER } from '../models/customer.js';
 export const addCustomer = async (req, res) => {
     try {
         const { customerName, userName, email } = req.body;
-        let imageData;
+
+        if (!customerName) {
+            return res.status(400).send({ message: "Customer name is required" });
+        }
+        if (!userName) {
+            return res.status(400).send({ message: "User name is required" });
+        }
+        if (!email) {
+            return res.status(400).send({ message: "Email is required" });
+        }
+
+        let imageData = null;
         if (req.file) {
             imageData = {
                 data: req.file.buffer,
@@ -20,17 +31,14 @@ export const addCustomer = async (req, res) => {
 
         const addedCustomer = await customer.save();
 
-        if (addedCustomer) {
-            res.status(201).send({
-                message: "Customer created successfully",
-                customerData: addedCustomer
-            });
-        } else {
-            res.status(404).send("Customer not added");
-        }
+        res.status(201).send({
+            message: "Customer created successfully",
+            customerData: addedCustomer
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        const errorMessage = error.code === 11000 ? "Customer already exists" : "Internal Server Error";
+        res.status(500).send({ message: errorMessage, error: error.message });
     }
 };
-
