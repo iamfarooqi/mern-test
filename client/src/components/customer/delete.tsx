@@ -1,14 +1,32 @@
 import Modal from '@/common/modal';
-import React, { useState } from 'react';
+import { useAppDispatch } from '@/redux/hooks';
+import { deleteCustomer } from '@/redux/slices/customerSlice';
+import { Customer } from '@/redux/types';
+import React from 'react';
 
 interface AddCustomerProps {
   open: boolean;
   setOpen: (arg0: boolean) => void;
+  customer: Customer | null; // Add this line
 }
 
-const DeleteCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
-  // Add your component logic here
+const DeleteCustomerModal: React.FC<AddCustomerProps> = ({
+  open,
+  setOpen,
+  customer,
+}) => {
+  const dispatch = useAppDispatch();
 
+  const handleDeleteCustomer = (customer: any) => {
+    try {
+      const id = customer?.id;
+      dispatch(deleteCustomer(id));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setOpen(false);
+    }
+  };
   return (
     <Modal open={open} setOpen={setOpen}>
       <div className="w-96 rounded-xl shadow">
@@ -59,7 +77,10 @@ const DeleteCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
           <button className="text-white bg-gray-400 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-12 py-2.5 mt-4 text-center me-6 uppercase">
             cancel
           </button>
-          <button className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-12 py-2.5 hover:text-gray-900 focus:z-10 uppercase">
+          <button
+            onClick={() => handleDeleteCustomer(customer)}
+            className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-12 py-2.5 hover:text-gray-900 focus:z-10 uppercase"
+          >
             delete
           </button>
         </div>

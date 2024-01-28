@@ -1,12 +1,46 @@
 import Modal from '@/common/modal';
-import React, { useState } from 'react';
+import { useAppDispatch } from '@/redux/hooks';
+import { updateCustomer } from '@/redux/slices/customerSlice';
+import { Customer } from '@/redux/types';
+import React, { useEffect, useState } from 'react';
 
 interface AddCustomerProps {
   open: boolean;
   setOpen: (arg0: boolean) => void;
+  customer: Customer | null; // Add this line
 }
 
-const EditCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
+const EditCustomerModal: React.FC<AddCustomerProps> = ({
+  open,
+  setOpen,
+  customer,
+}) => {
+  const dispatch = useAppDispatch();
+
+  const [formData, setFormData] = useState({
+    id: '',
+    userName: '',
+    customerName: '',
+    email: '',
+    // include other fields as needed
+  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(updateCustomer(formData));
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (customer) {
+      setFormData({
+        id: customer.id,
+        userName: customer.userName,
+        customerName: customer.customerName,
+        email: customer.email,
+      });
+    }
+  }, [customer]);
+
   return (
     <Modal open={open} setOpen={setOpen}>
       <div className="w-96 rounded-xl shadow">
@@ -37,7 +71,7 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
           </h3>
         </div>
         <div className="p-4 md:p-5">
-          <form className="space-y-4" action="#">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="py-1">
               <input
                 type="text"
@@ -45,6 +79,10 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Username"
+                value={formData.userName}
+                onChange={(e) =>
+                  setFormData({ ...formData, userName: e.target.value })
+                }
                 required
               />
             </div>
@@ -55,6 +93,10 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Customer Name"
+                value={formData.customerName}
+                onChange={(e) =>
+                  setFormData({ ...formData, customerName: e.target.value })
+                }
                 required
               />
             </div>
@@ -65,6 +107,10 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 required
               />
             </div>
@@ -78,7 +124,7 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
               type="submit"
               className="w-full text-white bg-primary-color hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center uppercase"
             >
-              Add Customer
+              Edit Customer
             </button>
           </form>
         </div>

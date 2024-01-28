@@ -1,4 +1,6 @@
 import Modal from '@/common/modal';
+import { useAppDispatch } from '@/redux/hooks';
+import { addCustomer } from '@/redux/slices/customerSlice';
 import React, { useState } from 'react';
 
 interface AddCustomerProps {
@@ -7,6 +9,25 @@ interface AddCustomerProps {
 }
 
 const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
+  const dispatch = useAppDispatch();
+  const [customerData, setCustomerData] = useState({
+    id: '',
+    userName: '',
+    customerName: '',
+    email: '',
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomerData({ ...customerData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Generate a unique ID for the customer - you can replace this with any ID generation logic
+    customerData.id = Date.now().toString();
+    dispatch(addCustomer(customerData));
+    setOpen(false); // Close the modal after adding
+  };
   return (
     <Modal open={open} setOpen={setOpen}>
       <div className="w-96 rounded-xl shadow">
@@ -37,7 +58,7 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
           </h3>
         </div>
         <div className="p-4 md:p-5">
-          <form className="space-y-4" action="#">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="py-1">
               <input
                 type="text"
@@ -45,6 +66,7 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Username"
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -55,6 +77,7 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Customer Name"
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -65,6 +88,7 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
                 id="email"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Email"
+                onChange={handleInputChange}
                 required
               />
             </div>

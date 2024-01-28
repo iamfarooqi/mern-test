@@ -2,26 +2,31 @@ import React, { useState } from 'react';
 import DeleteCustomerModal from './customer/delete';
 import AddCustomerModal from './customer/add';
 import EditCustomerModal from './customer/edit';
+import { useAppSelector } from '@/redux/hooks';
 
 interface Props {
   setMobileFiltersOpen: (arg0: boolean) => void;
 }
 
 const Table: React.FC<Props> = ({ setMobileFiltersOpen }) => {
+  const customers = useAppSelector((state) => state.customer.customers);
   const [deleteCustomerModal, setDeleteCustomerModal] = useState(false);
-  const [addCustomerModal, setAddCustomerModal] = useState(false);
   const [editCustomerModal, setEditCustomerModal] = useState(false);
+  const [addCustomerModal, setAddCustomerModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 overflow-y-scroll">
       <DeleteCustomerModal
         open={deleteCustomerModal}
+        customer={selectedCustomer} // This should be the customer you want to edit
         setOpen={setDeleteCustomerModal}
       />
       <AddCustomerModal open={addCustomerModal} setOpen={setAddCustomerModal} />
       <EditCustomerModal
         open={editCustomerModal}
         setOpen={setEditCustomerModal}
+        customer={selectedCustomer} // This should be the customer you want to edit
       />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 border-b bg-white border-gray-200 shadow-lg">
@@ -97,7 +102,8 @@ const Table: React.FC<Props> = ({ setMobileFiltersOpen }) => {
                 </tr>
               </thead>
               <tbody>
-                {[1, 2, 3, 4].map((index: any) => {
+                {customers?.map((data: any, index: any) => {
+                  const { customerName, userName, email } = data;
                   return (
                     <tr
                       key={index}
@@ -111,23 +117,29 @@ const Table: React.FC<Props> = ({ setMobileFiltersOpen }) => {
                         />
                       </td>
                       <td className="px-6 py-8 font-semibold text-gray-900 ">
-                        User Name
+                        {userName}
                       </td>
                       <td className="px-6 py-8 font-semibold text-gray-900 ">
-                        Customer Name
+                        {customerName}
                       </td>
                       <td className="px-6 py-8 font-semibold text-gray-900">
-                        name@gmail.com
+                        {email}
                       </td>
                       <td className="px-6 py-8 flex justify-evenly">
                         <button
-                          onClick={() => setEditCustomerModal(true)}
+                          onClick={() => {
+                            setSelectedCustomer(data);
+                            setEditCustomerModal(true);
+                          }}
                           className="px-4 py-[2px] font-medium text-green-600 bg-green-500/50 rounded hover:underline"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => setDeleteCustomerModal(true)}
+                          onClick={() => {
+                            setSelectedCustomer(data);
+                            setDeleteCustomerModal(true);
+                          }}
                           className="px-4 py-[2px] font-medium text-red-600 bg-red-500/50 rounded hover:underline"
                         >
                           Delete
