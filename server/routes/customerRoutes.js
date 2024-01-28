@@ -4,8 +4,8 @@ import { getCustomer } from '../controllers/getCustomer.js';
 
 const router = express.Router();
 // const upload = multer({ dest: 'uploads/' });
-router.post('/add-customer', addCustomer)
-router.get('/get-customer', getCustomer)
+router.post('/add', addCustomer)
+router.get('/get', getCustomer)
 // Routes go here
 
 export default router;

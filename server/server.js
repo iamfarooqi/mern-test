@@ -1,7 +1,8 @@
-import express from 'express';
 import bodyParser from 'body-parser';
+import express from 'express';
 import cors from 'cors';
-import customerRoutes from './routes/customerRoutes.js'; // Note the '.js' extension
+
+import customerRoutes from './routes/customerRoutes.js';
 import connectDB from './config/database.js';
 
 const app = express();
@@ -12,7 +13,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 connectDB()
 
-app.use('/api', customerRoutes);
+app.get('/', (req, res) => {
+  res.send('Server is running ok!');
+})
+app.use('/customer', customerRoutes);
 
 
 app.listen(port, () => {
