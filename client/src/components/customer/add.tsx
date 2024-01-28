@@ -11,6 +11,7 @@ interface AddCustomerProps {
 
 const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
   const dispatch = useAppDispatch();
+  const [fileError, setFileError] = useState('');
   const [customerData, setCustomerData] = useState({
     _id: '',
     userName: '',
@@ -28,7 +29,12 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
     const { files } = e.target;
     const file = files && files[0];
     if (file) {
-      setCustomerData({ ...customerData, profilePicture: file });
+      if (file.type === 'image/png') {
+        setCustomerData({ ...customerData, profilePicture: file });
+        setFileError('');
+      } else {
+        setFileError('Please upload a PNG image.');
+      }
     }
   };
   const handleSubmit = async (e: React.FormEvent) => {
@@ -122,6 +128,7 @@ const AddCustomerModal: React.FC<AddCustomerProps> = ({ open, setOpen }) => {
               >
                 Upload Photo
               </label>
+              {fileError && <p className="text-red-500">{fileError}</p>}
             </div>
             <button
               type="submit"

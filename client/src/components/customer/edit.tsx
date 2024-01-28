@@ -16,7 +16,7 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
   customer,
 }) => {
   const dispatch = useAppDispatch();
-
+  const [fileError, setFileError] = useState('');
   const [formData, setFormData] = useState({
     _id: '',
     userName: '',
@@ -26,9 +26,15 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
+    const { files } = e.target;
+    const file = files && files[0];
     if (file) {
-      setFormData({ ...formData, profilePicture: file });
+      if (file.type === 'image/png') {
+        setFormData({ ...formData, profilePicture: file });
+        setFileError('');
+      } else {
+        setFileError('Please upload a PNG image.');
+      }
     }
   };
   const handleSubmit = async (e: React.FormEvent) => {
@@ -142,6 +148,7 @@ const EditCustomerModal: React.FC<AddCustomerProps> = ({
               >
                 Update image
               </label>
+              {fileError && <p className="text-red-500">{fileError}</p>}
             </div>
             <button
               type="submit"
