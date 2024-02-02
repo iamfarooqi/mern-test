@@ -1,3 +1,5 @@
+In this i used Nextjs with Tailwind Css and TailwindUI Components, Redux for state management and Expressjs backend with mangoDB 
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
